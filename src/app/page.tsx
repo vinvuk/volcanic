@@ -1,26 +1,15 @@
 "use client";
 
 import { Suspense, useState, useCallback, useRef, useMemo, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { Header } from "@/components/Header";
-import { VolcanoPanel } from "@/components/VolcanoPanel";
-import { FilterControls } from "@/components/FilterControls";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { SearchBar } from "@/components/SearchBar";
-import { NavigationControls } from "@/components/NavigationControls";
 import { KeyboardShortcutsModal } from "@/components/KeyboardShortcutsModal";
-// V2 Components
-import { HeaderV2 } from "@/components/v2/HeaderV2";
-import { EruptionTicker } from "@/components/v2/EruptionTicker";
-import { VolcanoPanelV2 } from "@/components/v2/VolcanoPanelV2";
-import { FloatingActions } from "@/components/v2/FloatingActions";
-// V3 Components - Minimal
 import { MinimalHeader } from "@/components/v3/MinimalHeader";
 import { CompactPanel } from "@/components/v3/CompactPanel";
 import { MiniControls } from "@/components/v3/MiniControls";
 import { EruptionIndicator } from "@/components/v3/EruptionIndicator";
-import { StatsBar } from "@/components/v3/StatsBar";
 import { InfoModal, InfoButton } from "@/components/v3/InfoModal";
 import { SceneErrorBoundary } from "@/components/SceneErrorBoundary";
 import { useVolcanoes } from "@/hooks/useVolcanoes";
@@ -50,7 +39,6 @@ export default function Home() {
  * Manages global state and coordinates all child components
  */
 function HomeContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { volcanoes, isLoading } = useVolcanoes();
   const [selectedVolcano, setSelectedVolcano] = useState<Volcano | null>(null);
@@ -70,11 +58,6 @@ function HomeContent() {
   const [isLocating, setIsLocating] = useState(false);
   const [eruptingIndex, setEruptingIndex] = useState(0);
   const [initialUrlHandled, setInitialUrlHandled] = useState(false);
-
-  // UI version - check URL param (1=original, 2=bottom sheet, 3=minimal)
-  // Default is V3 (minimal/glass morphism)
-  const uiParam = searchParams.get("ui");
-  const uiVersion = uiParam === "1" ? 1 : uiParam === "2" ? 2 : 3;
 
   // Scene ref for camera controls
   const sceneRef = useRef<SceneControls>(null);
@@ -101,14 +84,9 @@ function HomeContent() {
 
   /**
    * Update URL when volcano selection changes
-   * Preserves the UI version parameter
    */
   const updateUrl = useCallback((volcano: Volcano | null) => {
     const params = new URLSearchParams();
-    // Only add ui param for non-default versions (V3 is now default)
-    if (uiVersion < 3) {
-      params.set("ui", String(uiVersion));
-    }
     if (volcano) {
       params.set("v", volcano.id);
     }
@@ -118,7 +96,7 @@ function HomeContent() {
       "",
       queryString ? `?${queryString}` : window.location.pathname
     );
-  }, [uiVersion]);
+  }, []);
 
   /**
    * Handle volcano selection with URL update
@@ -314,109 +292,43 @@ function HomeContent() {
 
       {/* UI Overlay */}
       <div className="content-layer pointer-events-none">
-        {uiVersion === 1 && (
-          <>
-            {/* V1 UI - Original */}
-            <Header />
+        <MinimalHeader
+          volcanoes={volcanoes}
+          visibleStatuses={visibleStatuses}
+          onToggleStatus={handleToggleStatus}
+          onSearch={() => setIsSearchOpen(true)}
+        />
 
-            <NavigationControls
-              onSearch={() => setIsSearchOpen(true)}
-              onMyLocation={handleMyLocation}
-              onZoomIn={() => sceneRef.current?.zoomIn()}
-              onZoomOut={() => sceneRef.current?.zoomOut()}
-              onResetView={() => sceneRef.current?.resetView()}
-              onHelp={() => setIsHelpOpen(true)}
-              isLocating={isLocating}
-            />
+        <CompactPanel
+          volcano={selectedVolcano}
+          onClose={() => handleSelectVolcano(null)}
+        />
 
-            <VolcanoPanel
-              volcano={selectedVolcano}
-              onClose={() => handleSelectVolcano(null)}
-            />
+        <MiniControls
+          eruptingVolcanoes={eruptingVolcanoes}
+          onSelectVolcano={handleSearchSelect}
+          onMyLocation={handleMyLocation}
+          onResetView={() => sceneRef.current?.resetView()}
+          onZoomIn={() => sceneRef.current?.zoomIn()}
+          onZoomOut={() => sceneRef.current?.zoomOut()}
+          onHelp={() => setIsHelpOpen(true)}
+          isLocating={isLocating}
+        />
 
-            <FilterControls
-              volcanoes={volcanoes}
-              visibleStatuses={visibleStatuses}
-              onToggleStatus={handleToggleStatus}
-            />
-          </>
-        )}
+        <EruptionIndicator
+          volcanoes={volcanoes}
+          onSelectVolcano={handleSearchSelect}
+        />
 
-        {uiVersion === 2 && (
-          <>
-            {/* V2 UI - Bottom sheet */}
-            <HeaderV2
-              volcanoes={volcanoes}
-              visibleStatuses={visibleStatuses}
-              onToggleStatus={handleToggleStatus}
-              onSearch={() => setIsSearchOpen(true)}
-            />
+        {/* Info button - bottom left */}
+        <div className="fixed bottom-5 left-5 z-50 pointer-events-auto">
+          <InfoButton onClick={() => setIsInfoOpen(true)} />
+        </div>
 
-            <EruptionTicker
-              volcanoes={volcanoes}
-              onSelectVolcano={handleSearchSelect}
-            />
+        {/* Info Modal */}
+        <InfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
 
-            <VolcanoPanelV2
-              volcano={selectedVolcano}
-              onClose={() => handleSelectVolcano(null)}
-            />
-
-            <FloatingActions
-              eruptingVolcanoes={eruptingVolcanoes}
-              onSelectVolcano={handleSearchSelect}
-              onMyLocation={handleMyLocation}
-              onResetView={() => sceneRef.current?.resetView()}
-              onZoomIn={() => sceneRef.current?.zoomIn()}
-              onZoomOut={() => sceneRef.current?.zoomOut()}
-              onHelp={() => setIsHelpOpen(true)}
-              isLocating={isLocating}
-            />
-          </>
-        )}
-
-        {uiVersion === 3 && (
-          <>
-            {/* V3 UI - Glass effects, bigger elements */}
-            <MinimalHeader
-              volcanoes={volcanoes}
-              visibleStatuses={visibleStatuses}
-              onToggleStatus={handleToggleStatus}
-              onSearch={() => setIsSearchOpen(true)}
-            />
-
-            <CompactPanel
-              volcano={selectedVolcano}
-              onClose={() => handleSelectVolcano(null)}
-            />
-
-            <MiniControls
-              eruptingVolcanoes={eruptingVolcanoes}
-              onSelectVolcano={handleSearchSelect}
-              onMyLocation={handleMyLocation}
-              onResetView={() => sceneRef.current?.resetView()}
-              onZoomIn={() => sceneRef.current?.zoomIn()}
-              onZoomOut={() => sceneRef.current?.zoomOut()}
-              onHelp={() => setIsHelpOpen(true)}
-              isLocating={isLocating}
-            />
-
-            <EruptionIndicator
-              volcanoes={volcanoes}
-              onSelectVolcano={handleSearchSelect}
-            />
-
-            {/* Info button - bottom left */}
-            <div className="fixed bottom-5 left-5 z-50 pointer-events-auto">
-              <InfoButton onClick={() => setIsInfoOpen(true)} />
-            </div>
-
-            {/* Info Modal */}
-            <InfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
-          </>
-        )}
-
-        {/* Hover Tooltip (all versions) */}
+        {/* Hover Tooltip */}
         {hoveredVolcano && (
           <div
             className="fixed pointer-events-none z-50 glass-solid px-3 py-2 rounded-lg"
