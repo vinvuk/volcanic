@@ -40,6 +40,10 @@ export const metadata: Metadata = {
   description: "Monitor Earth's volcanic activity like never before. Track volcanoes worldwide with stunning 3D visualization.",
   keywords: ["volcano tracker", "volcanic activity", "eruptions", "seismic", "real-time", "3D visualization"],
   authors: [{ name: "Volcanic" }],
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: "Volcanic | Real-Time Volcano Tracker",
     description: "Monitor Earth's volcanic activity like never before.",
