@@ -72,8 +72,9 @@ function HomeContent() {
   const [initialUrlHandled, setInitialUrlHandled] = useState(false);
 
   // UI version - check URL param (1=original, 2=bottom sheet, 3=minimal)
+  // Default is V3 (minimal/glass morphism)
   const uiParam = searchParams.get("ui");
-  const uiVersion = uiParam === "3" ? 3 : uiParam === "2" ? 2 : 1;
+  const uiVersion = uiParam === "1" ? 1 : uiParam === "2" ? 2 : 3;
 
   // Scene ref for camera controls
   const sceneRef = useRef<SceneControls>(null);
@@ -104,7 +105,8 @@ function HomeContent() {
    */
   const updateUrl = useCallback((volcano: Volcano | null) => {
     const params = new URLSearchParams();
-    if (uiVersion > 1) {
+    // Only add ui param for non-default versions (V3 is now default)
+    if (uiVersion < 3) {
       params.set("ui", String(uiVersion));
     }
     if (volcano) {
