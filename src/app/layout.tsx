@@ -48,7 +48,9 @@ export const metadata: Metadata = {
     title: "Volcanic | Real-Time Volcano Tracker",
     description: "Monitor Earth's volcanic activity like never before.",
     type: "website",
+    url: "https://viewvolcano.com",
   },
+  metadataBase: new URL("https://viewvolcano.com"),
 };
 
 /**
