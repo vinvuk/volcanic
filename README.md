@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Volcanic
+
+Real-time 3D visualization of volcanic activity worldwide.
+
+**[viewvolcano.com](https://viewvolcano.com)**
+
+## Features
+
+- **Interactive 3D Globe** - Explore Earth with high-resolution day/night textures and cloud layers
+- **1,400+ Volcanoes** - Comprehensive database sourced from the Smithsonian Global Volcanism Program
+- **Real-time Status** - Track erupting, warning, watch, advisory, and normal volcanoes
+- **Filter & Search** - Find volcanoes by name or filter by activity level
+- **Responsive Design** - Works on desktop and mobile devices
+- **PWA Support** - Install as an app on your device
+
+## Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) with App Router
+- **3D Rendering**: [Three.js](https://threejs.org/) + [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Deployment**: [Vercel](https://vercel.com/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/vinvuk/volcanic.git
+cd volcanic
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+No environment variables are required for basic functionality.
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── api/               # API routes for volcano data
+│   ├── layout.tsx         # Root layout with metadata
+│   └── page.tsx           # Main page component
+├── components/
+│   ├── Earth.tsx          # 3D Earth globe
+│   ├── Scene.tsx          # Three.js scene setup
+│   ├── VolcanoMarkers.tsx # Volcano point markers
+│   └── v3/                # UI components (glass morphism)
+├── hooks/                 # Custom React hooks
+└── lib/                   # Types and utilities
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data Sources
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Volcano Database**: [Smithsonian Global Volcanism Program](https://volcano.si.edu/)
+- **Earth Textures**: [Solar System Scope](https://www.solarsystemscope.com/textures/) (CC BY 4.0)
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is for educational and informational purposes.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Earth textures are used under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+
+## Disclaimer
+
+This application is **NOT intended for emergency use or safety decisions**. Volcano status information may be delayed, incomplete, or inaccurate. Always refer to official sources such as local geological surveys, USGS, or emergency services for safety-critical information.
