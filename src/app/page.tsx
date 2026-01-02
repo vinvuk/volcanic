@@ -22,6 +22,7 @@ import { MiniControls } from "@/components/v3/MiniControls";
 import { EruptionIndicator } from "@/components/v3/EruptionIndicator";
 import { StatsBar } from "@/components/v3/StatsBar";
 import { InfoModal, InfoButton } from "@/components/v3/InfoModal";
+import { SceneErrorBoundary } from "@/components/SceneErrorBoundary";
 import { useVolcanoes } from "@/hooks/useVolcanoes";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { Volcano, VolcanoStatus } from "@/lib/types";
@@ -296,16 +297,18 @@ function HomeContent() {
       <LoadingScreen isLoading={showLoading} />
 
       {/* 3D Scene */}
-      <Scene
-        ref={sceneRef}
-        volcanoes={volcanoes}
-        selectedVolcano={selectedVolcano}
-        onSelectVolcano={handleSelectVolcano}
-        visibleStatuses={visibleStatuses}
-        onLoadComplete={handleSceneLoadComplete}
-        isLoading={isLoading}
-        onHoverVolcano={handleHoverVolcano}
-      />
+      <SceneErrorBoundary>
+        <Scene
+          ref={sceneRef}
+          volcanoes={volcanoes}
+          selectedVolcano={selectedVolcano}
+          onSelectVolcano={handleSelectVolcano}
+          visibleStatuses={visibleStatuses}
+          onLoadComplete={handleSceneLoadComplete}
+          isLoading={isLoading}
+          onHoverVolcano={handleHoverVolcano}
+        />
+      </SceneErrorBoundary>
 
       {/* UI Overlay */}
       <div className="content-layer pointer-events-none">

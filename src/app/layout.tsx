@@ -1,6 +1,42 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+
+/**
+ * JSON-LD structured data for search engines
+ * Helps Google understand the application and display rich results
+ */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Volcanic",
+  alternateName: "View Volcano",
+  description:
+    "Monitor Earth's volcanic activity like never before. Track 1,400+ volcanoes worldwide with stunning 3D visualization.",
+  url: "https://viewvolcano.com",
+  applicationCategory: "EducationalApplication",
+  operatingSystem: "Any",
+  browserRequirements: "Requires JavaScript. Requires WebGL.",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  featureList: [
+    "Real-time volcano monitoring",
+    "Interactive 3D globe visualization",
+    "1,400+ volcano database",
+    "Eruption status tracking",
+    "Filter by activity level",
+  ],
+  screenshot: "https://viewvolcano.com/opengraph-image",
+  author: {
+    "@type": "Organization",
+    name: "Volcanic",
+    url: "https://viewvolcano.com",
+  },
+};
 
 /**
  * Display font - Cormorant Garamond
@@ -38,19 +74,39 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Volcanic | Real-Time Volcano Tracker",
   description: "Monitor Earth's volcanic activity like never before. Track volcanoes worldwide with stunning 3D visualization.",
-  keywords: ["volcano tracker", "volcanic activity", "eruptions", "seismic", "real-time", "3D visualization"],
+  keywords: ["volcano tracker", "volcanic activity", "eruptions", "seismic", "real-time", "3D visualization", "earth", "globe", "monitor"],
   authors: [{ name: "Volcanic" }],
+  creator: "Volcanic",
+  publisher: "Volcanic",
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",
   },
   openGraph: {
     title: "Volcanic | Real-Time Volcano Tracker",
-    description: "Monitor Earth's volcanic activity like never before.",
+    description: "Monitor Earth's volcanic activity like never before. Track 1,400+ volcanoes on an interactive 3D globe.",
     type: "website",
     url: "https://viewvolcano.com",
+    siteName: "Volcanic",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Volcanic | Real-Time Volcano Tracker",
+    description: "Monitor Earth's volcanic activity like never before. Track 1,400+ volcanoes on an interactive 3D globe.",
   },
   metadataBase: new URL("https://viewvolcano.com"),
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 /**
@@ -66,6 +122,32 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {/* Preload critical Earth textures for faster 3D scene loading */}
+        <link
+          rel="preload"
+          href="/textures/earth_day_8k.jpg"
+          as="image"
+          type="image/jpeg"
+        />
+        <link
+          rel="preload"
+          href="/textures/earth_night_8k.jpg"
+          as="image"
+          type="image/jpeg"
+        />
+        <link
+          rel="preload"
+          href="/textures/earth_clouds_8k.jpg"
+          as="image"
+          type="image/jpeg"
+        />
+        <Script
+          id="json-ld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body
         className={`${cormorantGaramond.variable} ${ibmPlexSans.variable} ${jetBrainsMono.variable} antialiased`}
       >

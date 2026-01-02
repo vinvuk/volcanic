@@ -102,8 +102,11 @@ export function MiniControls({
   ];
 
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 pointer-events-auto">
-      <div className="glass-panel rounded-2xl px-2 py-2 flex items-center gap-1">
+    <nav
+      className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
+      aria-label="Globe controls"
+    >
+      <div className="glass-panel rounded-2xl px-2 py-2 flex items-center gap-1" role="toolbar">
         {buttons.map((btn) => (
           <button
             key={btn.id}
@@ -114,11 +117,12 @@ export function MiniControls({
                 : "text-silver hover:bg-white/10"
             }`}
             title={btn.title}
+            aria-label={btn.title}
           >
             {btn.icon}
           </button>
         ))}
       </div>
-    </div>
+    </nav>
   );
 }
