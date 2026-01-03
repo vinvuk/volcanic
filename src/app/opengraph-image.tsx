@@ -56,27 +56,21 @@ export default async function Image() {
             width="120"
             height="120"
             viewBox="0 0 32 32"
-            style={{ filter: "drop-shadow(0 0 20px rgba(255,68,0,0.5))" }}
+            style={{ filter: "drop-shadow(0 0 12px rgba(255,68,0,0.8))" }}
           >
             <defs>
-              <linearGradient id="lava" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style={{ stopColor: "#ff4400" }} />
-                <stop offset="50%" style={{ stopColor: "#ff2200" }} />
-                <stop offset="100%" style={{ stopColor: "#cc1100" }} />
-              </linearGradient>
-              <linearGradient id="mountain" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style={{ stopColor: "#4a4a52" }} />
-                <stop offset="100%" style={{ stopColor: "#2a2a32" }} />
+              <linearGradient id="glow" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style={{ stopColor: "#ff6b3d" }} />
+                <stop offset="100%" style={{ stopColor: "#c41e00" }} />
               </linearGradient>
             </defs>
-            <path d="M16 8 L26 26 L6 26 Z" fill="url(#mountain)" />
-            <ellipse cx="16" cy="9" rx="4" ry="1.5" fill="#1a1a1e" />
-            <ellipse cx="16" cy="6" rx="3" ry="2" fill="url(#lava)" opacity="0.9" />
-            <circle cx="14" cy="4" r="1" fill="#ff4400" />
-            <circle cx="18" cy="3" r="0.8" fill="#ff6600" />
-            <circle cx="16" cy="2" r="1.2" fill="#ff2200" />
-            <circle cx="13" cy="1" r="0.6" fill="#ff8800" />
-            <circle cx="19" cy="1.5" r="0.7" fill="#ff4400" />
+            <path
+              d="M16 4 L28 28 L4 28 Z"
+              fill="none"
+              stroke="url(#glow)"
+              strokeWidth="2"
+              strokeLinejoin="round"
+            />
           </svg>
         </div>
 
