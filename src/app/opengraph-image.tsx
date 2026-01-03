@@ -75,6 +75,8 @@ export default async function Image() {
             <circle cx="14" cy="4" r="1" fill="#ff4400" />
             <circle cx="18" cy="3" r="0.8" fill="#ff6600" />
             <circle cx="16" cy="2" r="1.2" fill="#ff2200" />
+            <circle cx="13" cy="1" r="0.6" fill="#ff8800" />
+            <circle cx="19" cy="1.5" r="0.7" fill="#ff4400" />
           </svg>
         </div>
 
