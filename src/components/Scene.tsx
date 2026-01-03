@@ -5,7 +5,7 @@ import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
 import { Earth, Starfield } from "./Earth";
-import { VolcanoMarkers } from "./VolcanoMarkers";
+import { VolcanoMarkersV2 } from "./VolcanoMarkersV2";
 import { Volcano } from "@/lib/types";
 
 /**
@@ -299,12 +299,13 @@ function SceneContent({
 
       <Earth />
 
-      <VolcanoMarkers
+      <VolcanoMarkersV2
         volcanoes={volcanoes}
         selectedVolcano={selectedVolcano}
         onSelectVolcano={onSelectVolcano}
         visibleStatuses={visibleStatuses}
         onHoverVolcano={onHoverVolcano}
+        visualStyle="dots"
       />
     </>
   );
