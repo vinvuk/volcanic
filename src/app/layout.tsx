@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
+import { PostHogProvider } from "@/components/PostHogProvider";
 import "./globals.css";
 
 /**
@@ -157,7 +158,7 @@ export default function RootLayout({
       <body
         className={`${cormorantGaramond.variable} ${ibmPlexSans.variable} ${jetBrainsMono.variable} antialiased`}
       >
-        {children}
+        <PostHogProvider>{children}</PostHogProvider>
       </body>
     </html>
   );
