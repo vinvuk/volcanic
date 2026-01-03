@@ -167,7 +167,7 @@ function AboutContent() {
 function PrivacyContent() {
   return (
     <div className="space-y-4 text-sm text-silver/80 leading-relaxed">
-      <p className="text-silver/60 text-xs">Last updated: January 2025</p>
+      <p className="text-silver/60 text-xs">Last updated: January 2026</p>
 
       <div>
         <h3 className="text-cream font-medium mb-2">Analytics</h3>
@@ -233,7 +233,7 @@ function PrivacyContent() {
 function TermsContent() {
   return (
     <div className="space-y-4 text-sm text-silver/80 leading-relaxed">
-      <p className="text-silver/60 text-xs">Last updated: January 2025</p>
+      <p className="text-silver/60 text-xs">Last updated: January 2026</p>
 
       <div>
         <h3 className="text-cream font-medium mb-2">Acceptance of Terms</h3>
