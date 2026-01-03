@@ -80,7 +80,7 @@ export const metadata: Metadata = {
   publisher: "Volcanic",
   icons: {
     icon: "/favicon.svg",
-    apple: "/favicon.svg",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "Volcanic | Real-Time Volcano Tracker",
@@ -96,6 +96,12 @@ export const metadata: Metadata = {
     description: "Monitor Earth's volcanic activity like never before. Track 1,400+ volcanoes on an interactive 3D globe.",
   },
   metadataBase: new URL("https://viewvolcano.com"),
+  alternates: {
+    canonical: "https://viewvolcano.com",
+  },
+  other: {
+    "theme-color": "#ff2200",
+  },
   robots: {
     index: true,
     follow: true,
