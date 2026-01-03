@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type TabId = "about" | "privacy" | "terms" | "credits";
@@ -20,14 +20,23 @@ const TABS: Tab[] = [
 interface InfoModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialTab?: TabId;
 }
 
 /**
  * Info modal with tabs for About, Privacy Policy, Terms of Use, and Credits
  * Uses glass morphism design consistent with the app
+ * @param isOpen - Whether the modal is visible
+ * @param onClose - Callback to close the modal
+ * @param initialTab - Optional tab to show when modal opens (defaults to "about")
  */
-export function InfoModal({ isOpen, onClose }: InfoModalProps) {
-  const [activeTab, setActiveTab] = useState<TabId>("about");
+export function InfoModal({ isOpen, onClose, initialTab = "about" }: InfoModalProps) {
+  const [activeTab, setActiveTab] = useState<TabId>(initialTab);
+
+  // Sync activeTab when initialTab changes (e.g., when opening to privacy tab)
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
 
   return (
     <AnimatePresence>

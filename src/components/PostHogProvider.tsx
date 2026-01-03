@@ -1,15 +1,35 @@
 "use client";
 
 import posthog from "posthog-js";
-import { PostHogProvider as PHProvider } from "posthog-js/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { CookieConsent, getConsentStatus, ConsentStatus } from "./CookieConsent";
 
 /**
- * Initialize PostHog with the configured settings
+ * PostHog analytics provider component with GDPR-compliant cookie consent
+ * Only initializes PostHog after user grants consent
+ * Uses refs to avoid re-renders that would reset the 3D scene
  */
-function initPostHog() {
-  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+export function PostHogProvider({ children }: { children: React.ReactNode }) {
+  const initializedRef = useRef(false);
+
+  // Check for existing consent on mount
+  useEffect(() => {
+    if (initializedRef.current) return;
+
+    const status = getConsentStatus();
+    if (status === "granted") {
+      initializePostHog();
+    }
+  }, []);
+
+  /**
+   * Initialize PostHog with the configured settings
+   */
+  const initializePostHog = () => {
+    if (initializedRef.current) return;
+    if (typeof window === "undefined") return;
+    if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
+
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com",
       person_profiles: "identified_only",
@@ -18,61 +38,35 @@ function initPostHog() {
       autocapture: true,
       persistence: "localStorage+cookie",
       respect_dnt: true,
+      loaded: () => {
+        // Capture the initial pageview after initialization
+        posthog.capture("$pageview");
+      },
     });
-  }
-}
 
-/**
- * PostHog analytics provider component with GDPR-compliant cookie consent
- * Only initializes PostHog after user grants consent
- */
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  const [consentStatus, setConsentStatus] = useState<ConsentStatus>(null);
-  const [initialized, setInitialized] = useState(false);
-
-  // Check for existing consent on mount
-  useEffect(() => {
-    const status = getConsentStatus();
-    setConsentStatus(status);
-
-    // If already consented, initialize PostHog
-    if (status === "granted" && !initialized) {
-      initPostHog();
-      setInitialized(true);
-    }
-  }, [initialized]);
+    initializedRef.current = true;
+  };
 
   /**
    * Handle consent status change from the banner
    * @param status - The new consent status
    */
   const handleConsentChange = (status: ConsentStatus) => {
-    setConsentStatus(status);
-
-    if (status === "granted" && !initialized) {
-      initPostHog();
-      setInitialized(true);
-    } else if (status === "denied" && initialized) {
-      // Opt out if previously initialized
-      posthog.opt_out_capturing();
+    if (status === "granted") {
+      initializePostHog();
     }
+    // If denied, PostHog was never initialized so nothing to do
   };
 
-  // If no API key configured, just render children
+  // If no API key configured, just render children without consent banner
   if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) {
     return <>{children}</>;
   }
 
-  // Wrap with PostHog provider only if initialized
-  const content = initialized ? (
-    <PHProvider client={posthog}>{children}</PHProvider>
-  ) : (
-    <>{children}</>
-  );
-
+  // Always render children directly - no wrapper changes
   return (
     <>
-      {content}
+      {children}
       <CookieConsent onConsentChange={handleConsentChange} />
     </>
   );

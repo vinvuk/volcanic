@@ -55,6 +55,7 @@ function HomeContent() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [infoModalTab, setInfoModalTab] = useState<"about" | "privacy" | "terms" | "credits">("about");
   const [isLocating, setIsLocating] = useState(false);
   const [eruptingIndex, setEruptingIndex] = useState(0);
   const [initialUrlHandled, setInitialUrlHandled] = useState(false);
@@ -81,6 +82,21 @@ function HomeContent() {
     }
     setInitialUrlHandled(true);
   }, [volcanoes, sceneLoaded, searchParams, initialUrlHandled]);
+
+  /**
+   * Listen for custom event from cookie consent to open privacy policy
+   */
+  useEffect(() => {
+    const handleOpenPrivacy = () => {
+      setInfoModalTab("privacy");
+      setIsInfoOpen(true);
+    };
+
+    window.addEventListener("open-privacy-policy", handleOpenPrivacy);
+    return () => {
+      window.removeEventListener("open-privacy-policy", handleOpenPrivacy);
+    };
+  }, []);
 
   /**
    * Update URL when volcano selection changes
@@ -326,7 +342,15 @@ function HomeContent() {
         </div>
 
         {/* Info Modal */}
-        <InfoModal isOpen={isInfoOpen} onClose={() => setIsInfoOpen(false)} />
+        <InfoModal
+          isOpen={isInfoOpen}
+          onClose={() => {
+            setIsInfoOpen(false);
+            // Reset to default tab when closing
+            setInfoModalTab("about");
+          }}
+          initialTab={infoModalTab}
+        />
 
         {/* Hover Tooltip */}
         {hoveredVolcano && (

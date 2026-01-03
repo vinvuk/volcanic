@@ -104,16 +104,15 @@ export function CookieConsent({
             </div>
 
             <p className="text-silver/40 text-[10px] mt-3 text-center">
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // Could open privacy modal here
+              <button
+                onClick={() => {
+                  // Dispatch custom event to open privacy policy modal
+                  window.dispatchEvent(new CustomEvent("open-privacy-policy"));
                 }}
                 className="hover:text-silver/60 underline"
               >
                 Learn more in our Privacy Policy
-              </a>
+              </button>
             </p>
           </div>
         </motion.div>
